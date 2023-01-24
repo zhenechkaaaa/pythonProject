@@ -1,9 +1,8 @@
 import requests
 import os
-from waitress import serve
-from flask import Flask, url_for, request, render_template, redirect
-from flask_loginp import LoginManager, login_user, login_required, logout_user, current_user
-from flask_restful import reqparse, abort, Api, Resource
+from flask import Flask, render_template, redirect
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_restful import Api
 from forms.signup import RegisterForm
 from forms.login import LoginForm
 from forms.note import NoteForm
@@ -123,6 +122,7 @@ def edit_news(note_id):
     return render_template('news.html', title='Изменение отзыва',
                            form=form)
 
+
 @app.route("/logout")
 @login_required
 def logout():
@@ -140,6 +140,7 @@ def main():
     db_sess = db_session.create_session()
     db_sess.commit()
 
+
 @login_manager.user_loader
 def load_user(user_id):
     db_sess = db_session.create_session()
@@ -149,4 +150,4 @@ def load_user(user_id):
 if __name__ == '__main__':
     main()
     port = int(os.environ.get("PORT", 8080))
-    serve(app,host='127.0.0.1', port=port)
+    app.run(host='127.0.0.1', port=port)
